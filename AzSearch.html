@@ -50,47 +50,55 @@
                         <div className="panel panel-primary behclick-panel">
                             
                             <li>
-                                <div id="bedsFacet">
+                                <div id="HotelIdFacet">
                                 </div>
                             </li>
                             <li>
-                                <div id="bathsFacet">
+                                <div id="CategoryFacet">
                                 </div>
                             </li>
                             <li>
-                                <div id="sqftFacet">
+                                <div id="TagsFacet">
                                 </div>
                             </li>
                             <li>
-                                <div id="daysOnMarketFacet">
+                                <div id="RatingFacet">
                                 </div>
                             </li>
                             <li>
-                                <div id="statusFacet">
+                                <div id="Address/CityFacet">
                                 </div>
                             </li>
                             <li>
-                                <div id="typeFacet">
+                                <div id="Address/StateProvinceFacet">
                                 </div>
                             </li>
                             <li>
-                                <div id="cityFacet">
+                                <div id="Address/PostalCodeFacet">
                                 </div>
                             </li>
                             <li>
-                                <div id="regionFacet">
+                                <div id="Address/CountryFacet">
                                 </div>
                             </li>
                             <li>
-                                <div id="postCodeFacet">
+                                <div id="Rooms/TypeFacet">
                                 </div>
                             </li>
                             <li>
-                                <div id="priceFacet">
+                                <div id="Rooms/BaseRateFacet">
                                 </div>
                             </li>
                             <li>
-                                <div id="tagsFacet">
+                                <div id="Rooms/BedOptionsFacet">
+                                </div>
+                            </li>
+                            <li>
+                                <div id="Rooms/SleepsCountFacet">
+                                </div>
+                            </li>
+                            <li>
+                                <div id="Rooms/TagsFacet">
                                 </div>
                             </li>
                         </div>
@@ -123,11 +131,9 @@
     // CORS (*) must be enabled in the index before using the demo app. API key authentication must be enabled in the search service.
 
     // Initialize and connect to your search service
-    var automagic = new AzSearch.Automagic({ index: "realestate-us-sample-index", queryKey: "1bZ3pJGg6FNstUQSQSyutSpNI9CCcUclLys8UkVebXAzSeCy2WeS", service: "searchdocfaq", dnsSuffix:"search.windows.net" });
+    var automagic = new AzSearch.Automagic({ index: "hotels-sample-index", queryKey: "XNvDdn5t1gVKwnjEcdCMNfVHycO0vG7t5kqm4tyU8nAzSeB0xGdb", service: "azcognitive", dnsSuffix:"search.windows.net" });
     
-    const resultTemplate = `<div class="col-xs-12 col-sm-3 col-md-3 result_img" >
-            <img class="img-responsive result_img" src={{description}} alt="image not found" />
-        </div><div class="col-xs-12 col-sm-9 col-md-9"><h4>{{number}}</h4><div class="resultDescription">{{{locations}}}</div></div>`;
+    const resultTemplate = `<div class="col-xs-12 col-sm-9 col-md-9"><h4>{{HotelName}}</h4><div class="resultDescription">{{{Description}}}</div></div>`;
 
     // add a results view using the template defined above
     automagic.addResults("results", { count: true }, resultTemplate);
@@ -146,8 +152,8 @@
     automagic.store.setSuggestionsProcessor(suggestionsProcessor);
 
     var suggestionsTemplate = `
-            <p> listingId: {{listingId}} </p>
-            <p> beds: {{beds}} </p> {{{searchText}}}`;
+            <h3> HotelId: {{HotelId}} </h3>
+            <p> HotelName: {{HotelName}} </p> {{{searchText}}}`;
 
     // Add a search box that uses suggester "sg", grabbing some additional fields to display during suggestions. Use the template defined above
     automagic.addSearchBox("searchBox",
@@ -155,22 +161,24 @@
             highlightPreTag: "<b>",
             highlightPostTag: "</b>",
             suggesterName: "sg",
-            select: "listingId,beds"
+            select: "HotelId,HotelName"
         },
         "",
         suggestionsTemplate);
     
-       automagic.addRangeFacet("bedsFacet", "beds", "number", 0, 1000000);
-   automagic.addRangeFacet("bathsFacet", "baths", "number", 0, 1000000);
-   automagic.addRangeFacet("sqftFacet", "sqft", "number", 0, 1000000);
-   automagic.addRangeFacet("daysOnMarketFacet", "daysOnMarket", "number", 0, 1000000);
-   automagic.addCheckboxFacet("statusFacet", "status", "string");
-   automagic.addCheckboxFacet("typeFacet", "type", "string");
-   automagic.addCheckboxFacet("cityFacet", "city", "string");
-   automagic.addCheckboxFacet("regionFacet", "region", "string");
-   automagic.addCheckboxFacet("postCodeFacet", "postCode", "string");
-   automagic.addRangeFacet("priceFacet", "price", "number", 0, 1000000);
-   automagic.addCheckboxFacet("tagsFacet", "tags", "collection");
+       automagic.addCheckboxFacet("HotelIdFacet", "HotelId", "string");
+   automagic.addCheckboxFacet("CategoryFacet", "Category", "string");
+   automagic.addCheckboxFacet("TagsFacet", "Tags", "collection");
+   automagic.addRangeFacet("RatingFacet", "Rating", "number", 0, 1000000);
+   automagic.addCheckboxFacet("Address/CityFacet", "Address/City", "string");
+   automagic.addCheckboxFacet("Address/StateProvinceFacet", "Address/StateProvince", "string");
+   automagic.addCheckboxFacet("Address/PostalCodeFacet", "Address/PostalCode", "string");
+   automagic.addCheckboxFacet("Address/CountryFacet", "Address/Country", "string");
+   automagic.addCheckboxFacet("Rooms/TypeFacet", "Rooms/Type", "string");
+   automagic.addRangeFacet("Rooms/BaseRateFacet", "Rooms/BaseRate", "number", 0, 1000000);
+   automagic.addCheckboxFacet("Rooms/BedOptionsFacet", "Rooms/BedOptions", "string");
+   automagic.addRangeFacet("Rooms/SleepsCountFacet", "Rooms/SleepsCount", "number", 0, 1000000);
+   automagic.addCheckboxFacet("Rooms/TagsFacet", "Rooms/Tags", "collection");
 
 
     // Adds a button to clear any applied filters
